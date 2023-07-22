@@ -30,6 +30,7 @@ async def index():
 
 @app.post("/predict")
 async def predict(request: RequestInput):
+    print(request.input)
     request_input = DataPreprocessing(
         target_datatype=np.float32, 
         image_width=IMAGE_WIDTH,
