@@ -1,4 +1,4 @@
-from model.deep_learning_model import MNIST_Classify_Model, DataPreprocessing
+from model.classify_model import MNIST_Classify_Model, DataPreprocessing
 import numpy as np
 import torch
 import base64

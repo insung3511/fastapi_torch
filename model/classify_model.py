@@ -17,31 +17,41 @@ class MNIST_Classify_Model(nn.Module):
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.conv3 = nn.Conv2d(64, 128, 3, 1)
+        self.conv4 = nn.Conv2d(128, 256, 3, 1, 1)
         self.maxpool2d = nn.MaxPool2d(2)
         self.dropout = nn.Dropout2d(0.25)
 
         self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(128, 32)
-        self.fc2 = nn.Linear(32, 10)
+        self.fc1 = nn.Linear(256, 64)
+        self.fc2 = nn.Linear(64, 10)
 
     def forward(self, x):
+        # Feature Extraction Layer 1
         x = self.conv1(x)
         x = F.relu(x)
         x = self.maxpool2d(x)
+       
+        # Feature Extraction Layer 2
         x = self.conv2(x)
         x = F.relu(x)
         x = self.maxpool2d(x)
+        
+        # Feature Extraction Layer 3
         x = self.conv3(x)
         x = F.relu(x)
         x = self.maxpool2d(x)
-        x = self.dropout(x)
-        x = self.flatten(x)
-        x = self.fc1(x)
-        x = F.relu(x)
-        x = self.dropout(x)
-        x = self.fc2(x)
 
-        return F.softmax(x, dim=1)
+        # Feature Extraction Layer 4
+        x = self.conv4(x)
+        x = F.relu(x)
+        x = self.maxpool2d(x)
+
+        # Classification Layer
+        x = self.flatten(x)                 # Shape: (batch_size, 256, 1, 1) -> (batch_size, 256)
+        x = F.relu(self.fc1(x))             # Shape: (batch_size, 256) -> (batch_size, 64)
+        x = F.softmax(self.fc2(x), dim=1)   # Shape: (batch_size, 64) -> (batch_size, 10)
+
+        return x
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return super().__call__(*args, **kwds)
