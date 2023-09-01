@@ -4,6 +4,7 @@ import torch
 import base64
 import cv2
 
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi import FastAPI
 
@@ -16,10 +17,17 @@ CLASSIFY_MODEL.load_state_dict(torch.load(SAVED_MODEL_PATH))
 IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_CHANNEL = 28, 28, 1
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 test_image = cv2.imread("./test.png", cv2.IMREAD_GRAYSCALE)
 test_image = cv2.resize(test_image, (28, 28))
-test_image = base64.b64encode(test_image)
-print(test_image)
+test_image = test_image.tobytes()
 
 class RequestInput(BaseModel):
     input: str

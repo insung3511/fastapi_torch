@@ -11,6 +11,7 @@ To improve convenience and code reusability, the deep learning network is separa
 Please make sure to have `model.pth` available, as it will be used for API predictions.
 
 ## FastAPI Server
+
 The FastAPI server code is located in `main.py`. The following code snippet was included for temporary testing purposes, and it can be removed if necessary:
 
 ```python

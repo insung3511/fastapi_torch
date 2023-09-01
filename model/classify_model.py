@@ -2,11 +2,14 @@ from typing import Any
 
 import torch.nn.functional as F
 import torch.nn as nn
+import logging
 import base64
 import torch
 import cv2
 
 import numpy as np
+
+logging.basicConfig(level=logging.INFO)
 
 class MNIST_Classify_Model(nn.Module):
     def __init__(self, input_shape: tuple = (28, 28), output_shape: tuple = (10)):
@@ -17,12 +20,11 @@ class MNIST_Classify_Model(nn.Module):
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.conv3 = nn.Conv2d(64, 128, 3, 1)
-        self.conv4 = nn.Conv2d(128, 256, 3, 1, 1)
         self.maxpool2d = nn.MaxPool2d(2)
         self.dropout = nn.Dropout2d(0.25)
 
         self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(256, 64)
+        self.fc1 = nn.Linear(128, 64)
         self.fc2 = nn.Linear(64, 10)
 
     def forward(self, x):
@@ -38,11 +40,6 @@ class MNIST_Classify_Model(nn.Module):
         
         # Feature Extraction Layer 3
         x = self.conv3(x)
-        x = F.relu(x)
-        x = self.maxpool2d(x)
-
-        # Feature Extraction Layer 4
-        x = self.conv4(x)
         x = F.relu(x)
         x = self.maxpool2d(x)
 
