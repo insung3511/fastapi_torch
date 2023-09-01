@@ -1,4 +1,4 @@
-from deep_learning_model import MNIST_Classify_Model
+from classify_model import MNIST_Classify_Model
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from torchvision import datasets
@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch
 
 device = torch.device('mps')
-EPOCH = 100
+EPOCH = 1
 BATCH_SIZE = 32
 LEARNING_RATE = 3e-3
 
